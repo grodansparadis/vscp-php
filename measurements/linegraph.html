@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>ChartJS - LineGraph</title>
+		<style>
+			.chart-container {
+				width: 70%;
+				height: auto;
+			}
+		</style>
+
+	</head>
+	<body onload="loadPage()">
+
+		<div class="chart-container">
+			<canvas id="mycanvas"></canvas>
+		</div>
+		
+		<!-- javascript -->
+		<script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
+		<script type="text/javascript" src="js/moment.min.js"></script>
+		<script type="text/javascript" src="js/Chart.min.js"></script>
+		<!-- <script type="text/javascript" src="js/linegraph.js"></script> -->
+
+		<!-- Page load handler -->
+		<script>
+			function loadPage() {
+				
+			}
+		</script>
+
+		<script type="text/javascript">
+
+			$(document).ready(function(){
+		
+			$.ajax({
+			url : "https://www.eurosource.se/measurements/get_measurement.php?from=2018-03-06T00:00:00&to=2018-03-06T23:59:59",
+			type : "GET",
+			success : function(data) {
+
+				console.log(data);
+
+				var measurement_time = [];
+				var measurement_value = [];
+
+				for ( var i in data ) {
+					measurement_time.push( data[i].date ); // data[i].date.substr( 11, 2 )
+					measurement_value.push( data[i].value );
+				}
+
+				var config = {
+					type: 'line',
+					data: {
+						labels: measurement_time,
+						datasets: [{
+							label: "Temperature wall south",
+							fill: false,
+							lineTension: 0.1,
+							backgroundColor: "rgba(59, 89, 152, 0.75 )",
+							borderColor: "rgba(59, 89, 152, 1)",
+							pointHoverBackgroundColor: "rgba(59, 89, 152, 1)",
+							pointHoverBorderColor: "rgba(59, 89, 152, 1)",
+							//xAxisID: "test",
+							data: measurement_value
+						}]
+					},
+					// http://www.chartjs.org/docs/latest/axes/cartesian/time.html#ticks-source
+					options: {
+        				scales: {
+            				xAxes: [{
+								type: 'time',
+								format: "HH:mm",
+								unit: 'hour',
+								unitStepSize: 2,
+                				time: {											
+									displayFormats: {
+          								'millisecond': 'HH:mm',
+            							'second': 'HH:mm',
+            							'minute': 'HH:mm',
+            							'hour': 'HH:mm',
+            							'day': 'HH:mm',
+            							'week': 'HH:mm',
+            							'month': 'HH:mm',
+            							'quarter': 'HH:mm',
+										'year': 'HH:mm',
+										min: '00:00',
+      									max: '23:59'
+          							}
+								}
+            				}]
+        				}
+    				}
+				};
+
+				var ctx = $("#mycanvas");
+
+				var LineGraph = new Chart(ctx, config );
+			},
+			error : function(data) {
+
+			}
+		});
+		
+		});
+		</script>
+
+	</body>
+</html>

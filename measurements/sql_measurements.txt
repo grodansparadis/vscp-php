@@ -1,0 +1,54 @@
+// All for GUID for date
+
+SELECT date,value FROM `measurement` WHERE date >= '2018-03-04T12:00:00' AND guid="FF:FF:FF:FF:FF:FF:FF:FF:61:00:08:01:92:AF:A8:10"
+
+// MAX
+SELECT MAX(value) FROM `measurement` WHERE date >= date("2018-03-03") AND guid="FF:FF:FF:FF:FF:FF:FF:FF:61:00:08:01:92:AF:A8:10"
+
+
+// MIN
+SELECT MIN(value) FROM `measurement` WHERE date >= date("2018-03-03") AND guid="FF:FF:FF:FF:FF:FF:FF:FF:61:00:08:01:92:AF:A8:10"
+
+
+// Min/MAX
+SELECT MIN(value),MAX(value) FROM `measurement` WHERE date >= date("2018-03-03") AND guid="FF:FF:FF:FF:FF:FF:FF:FF:61:00:08:01:92:AF:A8:10"
+
+// Min/Max/Mean
+SELECT MIN(value),MAX(value),SUM(value)/COUNT(*) FROM `measurement` WHERE date >= date("2018-03-03") AND guid="FF:FF:FF:FF:FF:FF:FF:FF:61:00:08:01:92:AF:A8:10"
+
+
+// Between two date times
+SELECT * FROM `measurement` WHERE ( date BETWEEN '2018-03-03T00:00:00' AND '2018-03-03T23:23:59' )  AND guid='FF:FF:FF:FF:FF:FF:FF:FF:61:00:08:01:92:AF:A8:10'
+
+
+// Min/max/count between dates
+SELECT MIN(value), MAX(value), COUNT(*) FROM `measurement` WHERE ( date BETWEEN '2018-03-04T00:00:00' AND '2018-03-04T23:23:59' )  AND guid="FF:FF:FF:FF:FF:FF:FF:FF:61:00:08:01:92:AF:A8:10"
+
+// Last row
+SELECT fields FROM table ORDER BY id DESC LIMIT 1;
+
+
+Queries
+=======
+
+
+// First hour
+https://eurosource.se/get_measurement.php?from=2018-03-03T00:00:00&to=2018-03-03T00:59:59
+
+// Full day
+https://http://www.eurosource.se/measurements/get_measurement.php?from=2018-03-05T00:00:00&to=2018-03-05T23:59:59
+
+
+Tables
+======
+
+guid 		- Holds guid's and description of device guid defines.
+seco 		- Defines one sensor or control device.
+measurement - Holds a measurement.
+rawevent 	- Holds a raw VSCP event.
+zone 		- Defines a zone.
+subzone 	- Defines a subzone.
+
+
+json test code: http://jsonplaceholder.typicode.com/posts
+
