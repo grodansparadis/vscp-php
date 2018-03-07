@@ -59,8 +59,7 @@
 							backgroundColor: "rgba(59, 89, 152, 0.75 )",
 							borderColor: "rgba(59, 89, 152, 1)",
 							pointHoverBackgroundColor: "rgba(59, 89, 152, 1)",
-							pointHoverBorderColor: "rgba(59, 89, 152, 1)",
-							//xAxisID: "test",
+							pointHoverBorderColor: "rgba(59, 89, 152, 1)",						    
 							data: measurement_value
 						}]
 					},
@@ -86,8 +85,18 @@
 										min: '00:00',
       									max: '23:59'
           							}
-								}
-            				}]
+								},
+								scaleLabel: {
+        							display: true,
+        							labelString: 'hour'
+      							}
+							}],
+							yAxes: [{
+      							scaleLabel: {
+        							display: true,
+        							labelString: 'degrees Celsius'
+      							}
+    						}]
         				}
     				}
 				};

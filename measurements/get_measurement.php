@@ -15,16 +15,17 @@ if ( !$conn ){
 	die("Connection to database failed: " . $conn->error);
 }
 
-//$result = $conn->query("SELECT * FROM ".$obj->table." LIMIT ".$obj->limit);
-$result = $conn->query("SELECT date, value FROM `measurement` WHERE ( date BETWEEN '" . $from . "' AND '" . $to . "' )  AND guid='FF:FF:FF:FF:FF:FF:FF:FF:61:00:08:01:92:AF:A8:10'");
+$result = $conn->query("SELECT date, value FROM `measurement` " .
+   "WHERE ( date BETWEEN '" . $from . "' AND '" . $to . "' ) " .
+   "AND guid='FF:FF:FF:FF:FF:FF:FF:FF:61:00:08:01:92:AF:A8:10'" );
 
 $outp = array();
 $outp = $result->fetch_all( MYSQLI_ASSOC );
 
-//free memory associated with result
+// free memory associated with result
 $result->close();
 
-//close connection
+// close connection
 $conn->close();
 
 echo json_encode( $outp );
