@@ -1,33 +1,54 @@
 <?php
 
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+    /*
+    ini_set('display_errors', 1);
+    ini_set('display_startup_errors', 1);
+    error_reporting(E_ALL);
+    */
 
-header("Content-Type: application/json; charset=UTF-8");
-//$obj = json_decode($_GET["x"], false);
-$from = htmlspecialchars($_GET["from"]);
-$to = htmlspecialchars($_GET["to"]);
+    header("Content-Type: application/json; charset=UTF-8");
+    
+    // Get start date
+    $dt = new DateTime();
+    $from = $_GET["from"];
+    trim($from);
+    if ( 0 == strlen($from) ) {
+        $from = $dt->format('Y-m-d\T00:00:00');
+    }
 
-$conn = new mysqli("mysql690.loopia.se", "varg@v188090", "nestor82050", "vscp_org");
+    // Get end date
+    $to = $_GET["to"];
+    trim($to);
+    if ( 0 == strlen($to) ) {
+        $to = $dt->format('Y-m-d\T23:59:59');    
+    }
 
-if ( !$conn ){
-	die("Connection to database failed: " . $conn->error);
-}
+    // Get sensor GUID
+    $guid = $_GET["guid"];
+    trim($guid);
+    if ( 0 == strlen($guid) ) {
+        $guid = 'FF:FF:FF:FF:FF:FF:FF:FF:61:00:08:01:92:AF:A8:10';    
+    }    
 
-$result = $conn->query("SELECT date, value FROM `measurement` " .
-   "WHERE ( date BETWEEN '" . $from . "' AND '" . $to . "' ) " .
-   "AND guid='FF:FF:FF:FF:FF:FF:FF:FF:61:00:08:01:92:AF:A8:10'" );
+    $conn = new mysqli("mysql690.loopia.se", "test@v188090", "secret82050", "vscp_org");
 
-$outp = array();
-$outp = $result->fetch_all( MYSQLI_ASSOC );
+    if ( !$conn ){
+	    die("Connection to database failed: " . $conn->error);
+    }
 
-// free memory associated with result
-$result->close();
+    $result = $conn->query("SELECT date, value FROM `measurement` " .
+        "WHERE ( date BETWEEN '" . $from . "' AND '" . $to . "' ) " .
+        "AND guid='" . $guid . "';" );
 
-// close connection
-$conn->close();
+    $outp = array();
+    $outp = $result->fetch_all( MYSQLI_ASSOC );
 
-echo json_encode( $outp );
+    // free memory associated with result
+    $result->close();
+
+    // close connection
+    $conn->close();
+
+    echo json_encode( $outp );
 
 ?>

@@ -17,7 +17,8 @@
 ?>
 <html>
 	<head>
-        <meta http-equiv="refresh" content="60">
+		<meta http-equiv="refresh" content="60">
+		<meta charset="utf-8">
 		<title>Day temperature</title>
 		<style>
 			.chart-container {

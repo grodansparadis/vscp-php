@@ -17,11 +17,12 @@
 ?>
 <html>
 	<head>
-        <meta http-equiv="refresh" content="1000">
+		<meta http-equiv="refresh" content="1000">
+		<meta charset="utf-8">
 		<title>Day temperature</title>
 		<style>
 			.chart-container {
-				width: 70%;
+				width: 90%;
 				height: auto;
 			}
 		</style>
@@ -129,8 +130,8 @@
 			}
 
 			//createChart(data);
-		
-			setInterval(function(){ $.ajax({
+
+			function fetchData(){ $.ajax({
 			    url : "<?php echo $MEASUREMENT_HOST;?>get_measurement.php?from=<?php echo $from?>&to=<?php echo $to?>",
 			    type : "GET",
 			    success : function(data) {
@@ -172,7 +173,10 @@
 
                 }
             
-		    }); }, 1000 );
+		    }); }
+		
+			fetchData();
+			setInterval( function() { fetchData(); }, 600000 );
 		
 		});
 

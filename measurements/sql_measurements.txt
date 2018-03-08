@@ -27,6 +27,8 @@ SELECT MIN(value), MAX(value), COUNT(*) FROM `measurement` WHERE ( date BETWEEN 
 // Last row
 SELECT fields FROM table ORDER BY id DESC LIMIT 1;
 
+// seco units with GUID
+SELECT seco.name, seco.description, guid.guid FROM seco, guid WHERE guid.idx = seco.link_to_guid;
 
 Queries
 =======
@@ -51,4 +53,47 @@ subzone 	- Defines a subzone.
 
 
 json test code: http://jsonplaceholder.typicode.com/posts
+https://fullcalendar.io
+
+Add data to chart dynamically: 
+  https://stackoverflow.com/questions/31059399/how-to-push-datasets-dynamically-for-chart-js-bar-chart
+
+barChart.data.datasets.push({
+  label: 'label2',
+  backgroundColor: '#ff0000',
+  data: [1,2,3]
+});
+barChart.update();
+
+Here's a jsfiddle example.  
+
+Libs
+====
+
+https://github.com/rheh/HTML5-canvas-projects
+http://www.daterangepicker.com/
+https://longbill.github.io/jquery-date-range-picker/
+
+
+FF:FF:FF:FF:FF:FF:FF:FF:3C:00:08:01:92:9D:3D:10 	Office 1 - 1-wire
+FF:FF:FF:FF:FF:FF:FF:FF:61:00:08:01:92:AF:A8:10 	Temp outside (south wall)
+FF:FF:FF:FF:FF:FF:FF:FE:B8:27:EB:40:59:96:00:01 	CPU Pi1
+FF:FF:FF:FF:FF:FF:FF:FE:B8:27:EB:40:59:96:00:02 	
+
+<form action="/wiki/doku.php/" method="post">
+	<input type="hidden" name="do"   value="admin" />
+	<input type="hidden" name="page" value="backup" />
+<center>	Backup method: <select name="backup[type]">
+		<option value="exec" selected>GNU Tar (filtered)</option>
+		<option value="lazy" >GNU Tar (fast;unfiltered)</option>
+	</select><br/><br/>
+<table class="inline">	<tr><th> Item type </th><th> Add to archive? </th></tr>	<tr><td> Pages </td><td><input type="checkbox" name="backup[pages]" checked/></td></tr>	<tr><td> Old Revisions of Pages </td><td><input type="checkbox" name="backup[revisions]" checked/></td></tr>	<tr><td> Meta data (Subscriptions)</td><td><input type="checkbox" name="backup[subscriptions]" checked/></td></tr>	<tr><td> Media files </td><td><input type="checkbox" name="backup[media]" checked/></td></tr>	<tr><td> Wiki/<acronym title="Access Control List">ACL</acronym>/User Config </td><td><input type="checkbox" name="backup[config]" checked/></td></tr>	<tr><td> Templates</td><td><input type="checkbox" name="backup[templates]" checked/></td></tr>	<tr><td> Plugins</td><td><input type="checkbox" name="backup[plugins]" checked/></td></tr></table><br /><p><input type="submit" class="button" value="Create Backup"></p></center></form>
+
+
+
+
+/www/webvol23/r7/vdbq8cur420eh42/eurosource.se/public_html/measurements/get_seco.php
+
+https://stackoverflow.com/questions/25255891/add-active-class-dynamically-to-bootstrap-menu-and-opening-its-page
+
 
