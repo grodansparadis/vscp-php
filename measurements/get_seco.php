@@ -8,6 +8,7 @@
 	ini_set('display_startup_errors', 1);
 	error_reporting(E_ALL);*/
 
+	include '../../settings.cfg';  // Settings
 
 	header("Content-Type: application/json; charset=UTF-8");
 

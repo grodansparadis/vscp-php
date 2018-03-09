@@ -1,6 +1,6 @@
 <!doctype html>
 <?php 
-    include 'settings.cfg';  // Settings
+    include '../../settings.cfg';  // Settings
 
     $dt = new DateTime();
     $from = htmlspecialchars( $_GET["from"] );
@@ -21,9 +21,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="icon" href="js/bootstrap-4.0.0/favicon.ico">
+    <link rel="icon" href="favicon.ico">
 
-    <title>Dashboard Template for Bootstrap</title>
+    <title>VSCP measurements</title>
 
     <style>
 		.chart-container {
@@ -42,10 +42,10 @@
   <body>
     <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
       <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">VSCP</a>
-      <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search">
+      <input class="form-control form-control-dark w-100" type="text" placeholder="Date+time range" aria-label="Search">
       <ul class="navbar-nav px-3">
         <li class="nav-item text-nowrap">
-          <a class="nav-link" href="#">Sign out</a>
+          <a class="nav-link" href="#">Reload</a>
         </li>
       </ul>
     </nav>
@@ -59,21 +59,21 @@
 
               <li class="nav-item">
                 <a class="nav-link active" href="#">
-                  <span data-feather="home"></span>
-                  Measurements <span class="sr-only">(current)</span>
+                  <span data-feather="activity"></span>
+                  Measurements (current)<span class="sr-only"></span>
                 </a>
               </li>
 
               <li class="nav-item">
-                <a class="nav-link" href="https://www.vscp.org">
-                  <span data-feather="file"></span>
-                  Current all 
+                <a class="nav-link" href="#">
+                  <span data-feather="activity"></span>
+                  Current temperatures 
                 </a>
               </li>
               
               <li class="nav-item">
                 <a class="nav-link" href="#">
-                  <span data-feather="shopping-cart"></span>
+                  <span data-feather="bar-chart-2"></span>
                   All diagrams
                 </a>
               </li>
@@ -81,22 +81,8 @@
               <div id="guid_links"></div>
               <li class="nav-item">
                 <a class="nav-link" href="#">
-                  <span data-feather="users"></span>
-                  Customers
-                </a>
-              </li>
-              
-              <li class="nav-item">
-                <a class="nav-link" href="#">
-                  <span data-feather="bar-chart-2"></span>
-                  Reports
-                </a>
-              </li>
-              
-              <li class="nav-item">
-                <a class="nav-link" href="#">
-                  <span data-feather="layers"></span>
-                  Integrations
+                  <span data-feather="settings"></span>
+                  Settings
                 </a>
               </li>
 
@@ -121,10 +107,27 @@
                 <button class="btn btn-sm btn-outline-secondary">Share</button>
                 <button class="btn btn-sm btn-outline-secondary">Export</button>
               </div>
-              <button class="btn btn-sm btn-outline-secondary dropdown-toggle">
-                <span data-feather="calendar"></span>
-                Today
-              </button>
+              <div class="dropdown">
+                <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="rangeDropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <span data-feather="calendar"></span>
+                  Today                  
+                </button>
+                <div class="dropdown-menu" aria-labelledby="rangeDropdownMenuButton">
+                  <a class="dropdown-item" href="#">Set date+time</a>
+                  <a class="dropdown-item" href="#">Hour</a>
+                  <a class="dropdown-item" href="#">Previous hour</a>
+                  <a class="dropdown-item" href="#">Today</a>
+                  <a class="dropdown-item" href="#">Yesterday</a>
+                  <a class="dropdown-item" href="#">This week</a>
+                  <a class="dropdown-item" href="#">Last week</a>
+                  <a class="dropdown-item" href="#">This month</a>
+                  <a class="dropdown-item" href="#">Last month</a>
+                  <a class="dropdown-item" href="#">This quarter</a>
+                  <a class="dropdown-item" href="#">Last quarter</a>
+                  <a class="dropdown-item" href="#">This year</a>
+                  <a class="dropdown-item" href="#">Last year</a>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -269,8 +272,7 @@
               console.log('href="javascript:alert(\'' + data[i].guid + '\');">');  
               $("#side-menu").append('<li class="nav-item"><a class="nav-link" ' +
                                   'href="javascript:fetchData(\'' + data[i].guid + '\',\'' + data[i].name + '\');">' +
-                                  '<span data-feather="file-text"></span>' + 
-                                  data[i].name + '</a></li>');
+                                  '<span data-feather="file-text"> </span>' + data[i].name + '</a></li>');
             }
                                    
           },

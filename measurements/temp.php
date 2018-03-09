@@ -1,19 +1,60 @@
 <!DOCTYPE html>
 <?php 
-    include 'settings.cfg';  // Settings
+	/*
+	ini_set('display_errors', 1);
+    ini_set('display_startup_errors', 1);
+	error_reporting(E_ALL);
+	*/
 
+    include '../../settings.cfg';  // Settings
+
+	// 12 hours
+	$ix = new DateInterval('PT12H');
+
+	// get start date
     $dt = new DateTime();
-    $from = htmlspecialchars( $_GET["from"] );
+    $from = $_GET["from"];
     trim($from);
     if ( 0 == strlen($from) ) {
-        $from = $dt->format('Y-m-d\T00:00:00');
-    }
+		$dtfrom = new DateTime();
+		//$dtfrom = $dtfrom->sub($ix);
+		//$from = $dtfrom->format('Y-m-d\TH:i:s');
+		$from = $dtfrom->format('Y-m-d\T00:00:00');
+	}
+	
 
-    $to = htmlspecialchars( $_GET["to"] );
+	// Get end date
+    $to = $_GET["to"];
     trim($to);
     if ( 0 == strlen($to) ) {
-        $to = $dt->format('Y-m-d\T23:59:59');    
-    }
+		$dtto = new DateTime();
+		//$dtto = $dtto->add($ix);
+		//$to = $dtto->format('Y-m-d\TH:i:s');
+		$to = $dtto->format('Y-m-d\T23:59:59');
+		   
+	}
+	
+	// Get sensor GUID
+    $guid = $_GET["guid"];
+    trim($guid);
+    if ( 0 == strlen($guid) ) {
+        $guid = 'FF:FF:FF:FF:FF:FF:FF:FF:61:00:08:01:92:AF:A8:10';    
+	}
+	
+	$d1=new DateTime($from);
+    $d2=new DateTime($to);
+	$diff=$d2->diff($d1);
+	
+	$unit = "'minute'";
+	if ( $diff->y > 0 ) {
+		$unit = "'day'";
+	}
+    else if ( $diff->d > 0 ) {
+		$unit = "'hour'";
+	}
+	else {
+		$unit = "'minute'";
+	} 
 ?>
 <html>
 	<head>
@@ -34,10 +75,22 @@
 			<canvas id="mycanvas"></canvas>
 		</div>
 
-		<div id="updateTime">-----</div>
+		<h6><div id="updateTime">-----</div></h6>
+
+		<!--	
+		<?php echo( $from ); ?>
+		<?php echo( " - " ); ?>
+		<?php echo( $to ); ?>		
+		<?php echo( "<br>"); ?>
+		<?php print_r(  $diff ); ?>
+		<?php echo( "<br>"); ?>
+		<?php print date('d M Y\TH:i:s', strtotime('last day of this month') ); ?>
+		-->
+
+		<!--
 		<button class="btn-load" data-chart="data1">set 1</button>
 		<button class="btn-load" data-chart="data2">set 2</button>
-		
+		-->
 		
 		<!-- javascript -->
 		<script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
@@ -77,27 +130,25 @@
         			scales: {
             			xAxes: [{
 							type: 'time',
-							format: "HH:mm",
-							unit: 'hour',
+							//format: "HH:mm",
 							unitStepSize: 2,
-                			time: {											
+                			time: {	
+								unit: <?php echo $unit; ?>,										
 								displayFormats: {
           							'millisecond': 'HH:mm',
             						'second': 'HH:mm',
             						'minute': 'HH:mm',
-            						'hour': 'HH:mm',
-            						'day': 'HH:mm',
-            						'week': 'HH:mm',
-            						'month': 'HH:mm',
-            						'quarter': 'HH:mm',
-									'year': 'HH:mm',
-									min: '00:00',
-      								max: '23:59'
+            						'hour': 'D/M',
+            						'day': 'YYYY-MM-DD',
+            						'week': 'YYYY-MM-DD',
+            						'month': 'YYYY-MM-DD',
+            						'quarter': 'YYYY-MM-DD',
+									'year': 'YYYY-MM-DD',
           						}
 							},
 							scaleLabel: {
         						display: true,
-        						labelString: 'hour'
+        						labelString: '<?php echo( $from . " - " . $to ); ?>'
       						}
 						}],
 						yAxes: [{
@@ -166,7 +217,7 @@
 						}]
 					};
 					createChart( data );
-					$("div#updateTime").text( "Updated: " + moment().format("HH:mm:ss") );		    
+					$("div#updateTime").text( "Last updated: " + moment().format("YYYY-MM-DD HH:mm:ss") );		    
 				},
                 
                 error : function(data) {

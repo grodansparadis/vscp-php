@@ -90,10 +90,35 @@ FF:FF:FF:FF:FF:FF:FF:FE:B8:27:EB:40:59:96:00:02
 <table class="inline">	<tr><th> Item type </th><th> Add to archive? </th></tr>	<tr><td> Pages </td><td><input type="checkbox" name="backup[pages]" checked/></td></tr>	<tr><td> Old Revisions of Pages </td><td><input type="checkbox" name="backup[revisions]" checked/></td></tr>	<tr><td> Meta data (Subscriptions)</td><td><input type="checkbox" name="backup[subscriptions]" checked/></td></tr>	<tr><td> Media files </td><td><input type="checkbox" name="backup[media]" checked/></td></tr>	<tr><td> Wiki/<acronym title="Access Control List">ACL</acronym>/User Config </td><td><input type="checkbox" name="backup[config]" checked/></td></tr>	<tr><td> Templates</td><td><input type="checkbox" name="backup[templates]" checked/></td></tr>	<tr><td> Plugins</td><td><input type="checkbox" name="backup[plugins]" checked/></td></tr></table><br /><p><input type="submit" class="button" value="Create Backup"></p></center></form>
 
 
-
+http://php.net/manual/en/class.dateinterval.php
+http://php.net/manual/en/dateinterval.createfromdatestring.php
+http://www.php.net/manual/en/datetime.formats.relative.php
 
 /www/webvol23/r7/vdbq8cur420eh42/eurosource.se/public_html/measurements/get_seco.php
 
 https://stackoverflow.com/questions/25255891/add-active-class-dynamically-to-bootstrap-menu-and-opening-its-page
 
+
+year    $from = $dt->format('Y-01-01\T00:00:00');  
+		$to = $dt->format('Y-12-31\T23:59:59');
+
+month	$from = $dt->format('Y-m-01\T00:00:00');  
+		date('d M Y\T00:00:00', strtotime('last day of this month') )
+		$to = $dt->format('Y-m-28/30/31\T23:59:59');
+
+week	$from = $dt->format('Y-01-01\T00:00:00');  
+		$to = $dt->format('Y-12-31\T23:59:59');
+
+day		$from = $dt->format('Y-m-d\T00:00:00');  
+		$to = $dt->format('Y-m-d\T23:59:59');
+
+hour
+
+
+function getStartAndEndDate($week, $year) {
+  $dto = new DateTime();
+  $ret['week_start'] = $dto->setISODate($year, $week)->format('Y-m-d');
+  $ret['week_end'] = $dto->modify('+6 days')->format('Y-m-d');
+  return $ret;
+}
 

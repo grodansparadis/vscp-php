@@ -6,6 +6,8 @@
     error_reporting(E_ALL);
     */
 
+    include '../../settings.cfg';  // Settings
+
     header("Content-Type: application/json; charset=UTF-8");
     
     // Get start date
