@@ -94,29 +94,45 @@
                 <span data-feather="plus-circle"></span>
               </a>
             </h6>
-            <ul class="nav flex-column mb-2" id="side-menu">
+            <ul class="nav flex-column mb-2" id="side-seco-menu">
             </ul>
           </div>
         </nav>
 
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
           <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+            
             <h1 class="h2">VSCP Measurements</h1>
             <div class="btn-toolbar mb-2 mb-md-0">
+              
               <div class="btn-group mr-2">
                 <button class="btn btn-sm btn-outline-secondary">Share</button>
                 <button class="btn btn-sm btn-outline-secondary">Export</button>
               </div>
+              
+              <div class="btn-group mr-2">
+              <div class="dropdown">
+                <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="secoDropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <span data-feather="activity"></span>
+                  Office 1 temperature                  
+                </button>
+                <div class="dropdown-menu" aria-labelledby="top-seco-menu">
+                  <ul class="nav flex-column " id="top-seco-menu">
+                  </ul>  
+                </div>   
+              </div>
+              </div>
+              
               <div class="dropdown">
                 <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="rangeDropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   <span data-feather="calendar"></span>
-                  Today                  
+                  This day                  
                 </button>
                 <div class="dropdown-menu" aria-labelledby="rangeDropdownMenuButton">
                   <a class="dropdown-item" href="#">Set date+time</a>
-                  <a class="dropdown-item" href="#">Hour</a>
+                  <a class="dropdown-item" href="#">This hour</a>
                   <a class="dropdown-item" href="#">Previous hour</a>
-                  <a class="dropdown-item" href="#">Today</a>
+                  <a class="dropdown-item" href="#">This day</a>
                   <a class="dropdown-item" href="#">Yesterday</a>
                   <a class="dropdown-item" href="#">This week</a>
                   <a class="dropdown-item" href="#">Last week</a>
@@ -125,10 +141,11 @@
                   <a class="dropdown-item" href="#">This quarter</a>
                   <a class="dropdown-item" href="#">Last quarter</a>
                   <a class="dropdown-item" href="#">This year</a>
-                  <a class="dropdown-item" href="#">Last year</a>
+                  <a class="dropdown-item" href="#"><span data-feather="activity"></span> Last year</a>
                 </div>
               </div>
             </div>
+
           </div>
 
           <canvas class="my-4" id="mycanvas" width="900" height="380"></canvas>
@@ -146,7 +163,7 @@
     <!-- Placed at the end of the document so the pages load faster -->
     <script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
 	  <script type="text/javascript" src="js/moment.min.js"></script>
-  	<script type="text/javascript" src="js/Chart.min.js"></script>
+  	<!-- <script type="text/javascript" src="js/Chart.min.js"></script> -->
 	  <!-- <script type="text/javascript" src="js/linegraph.js"></script> -->
     <!-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script>window.jQuery || document.write('<script src="js/bootstrap-4.0.0/assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
@@ -205,7 +222,7 @@
                 unitStepSize: 2,
                 time: {											
                     displayFormats: {
-                          'millisecond': 'HH:mm',
+                        'millisecond': 'HH:mm',
                         'second': 'HH:mm',
                         'minute': 'HH:mm',
                         'hour': 'HH:mm',
@@ -270,9 +287,15 @@
               seco_description.push( data[i].description );
               seco_guid.push( data[i].guid );
               console.log('href="javascript:alert(\'' + data[i].guid + '\');">');  
-              $("#side-menu").append('<li class="nav-item"><a class="nav-link" ' +
+              $("#side-seco-menu").append('<li class="nav-item"><a class="nav-link" ' +
                                   'href="javascript:fetchData(\'' + data[i].guid + '\',\'' + data[i].name + '\');">' +
-                                  '<span data-feather="file-text"> </span>' + data[i].name + '</a></li>');
+                                  '<span data-feather="activity"></span> ' + data[i].name + '</a><span data-feather="activity"></span></li>');
+              /* $("#top-seco-menu").append('<a class="dropdown-item" ' +
+                                  'href="javascript:fetchData(\'' + data[i].guid + '\',\'' + data[i].name + '\');">' +
+                                  data[i].name +  ' </a>'); */
+              $("#top-seco-menu").append('<li class="nav-item"><a class="nav-link" ' +
+                                  'href="javascript:fetchData(\'' + data[i].guid + '\',\'' + data[i].name + '\');">' +
+                                  '<span data-feather="activity"> </span> ' + data[i].name + '</a></li>');                                                                  
             }
                                    
           },

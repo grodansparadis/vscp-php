@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <?php 
-	/*
-	ini_set('display_errors', 1);
+	
+	/*ini_set('display_errors', 1);
     ini_set('display_startup_errors', 1);
 	error_reporting(E_ALL);
 	*/
@@ -10,6 +10,13 @@
 
 	// 12 hours
 	$ix = new DateInterval('PT12H');
+
+	// Get label
+	$label = $_GET["label"];
+	trim($label);
+    if ( 0 == strlen($label) ) {
+		$label = "Measurement";
+	}
 
 	// get start date
     $dt = new DateTime();
@@ -75,7 +82,22 @@
 			<canvas id="mycanvas"></canvas>
 		</div>
 
-		<h6><div id="updateTime">-----</div></h6>
+		<br>
+
+		<div class="container">           
+  		<table class="table table-striped">	
+		<thead>
+			<tr><td>Data for selected range</td></tr>
+		</thead>
+		<tbody>	  
+		<tr><td><div class="text-success" id="updateTime"></div></td></tr>
+		<tr><td><div class="text-success" id="lastReading"></div></td></tr>
+		<tr><td><div class="text-success" id="minReading"></div></td></tr>
+		<tr><td><div class="text-success" id="maxReading"></div></td></tr>		
+		<tr><td><div class="text-success" id="meanReading"></div></td></tr>
+		<tr><td><div class="text-success" id="countReading"></div></td></tr>
+		</tbody>
+		</table>
 
 		<!--	
 		<?php echo( $from ); ?>
@@ -86,17 +108,24 @@
 		<?php echo( "<br>"); ?>
 		<?php print date('d M Y\TH:i:s', strtotime('last day of this month') ); ?>
 		-->
-
-		<!--
-		<button class="btn-load" data-chart="data1">set 1</button>
-		<button class="btn-load" data-chart="data2">set 2</button>
-		-->
 		
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
 		<!-- javascript -->
 		<script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
 		<script type="text/javascript" src="js/moment.min.js"></script>
-		<script type="text/javascript" src="js/Chart.min.js"></script>
-		<!-- <script type="text/javascript" src="js/linegraph.js"></script> -->
+
+		<script src="js/bootstrap-4.0.0/assets/js/vendor/popper.min.js"></script>
+    	<script src="js/bootstrap-4.0.0/dist/js/bootstrap.min.js"></script>
+
+		<!-- Icons -->		
+    	<script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
+    	<script>
+      		feather.replace()
+		</script>
+		
+    	<!-- Graphs -->
+    	<script src="js/Chart.min.js"></script>
 
 		<!-- Page load handler -->
 		<script type="text/javascript">
@@ -109,7 +138,7 @@
 			var data = {
 				labels: measurement_time,
 				datasets: [{
-					label: "Temperature south wall",
+					label: "<?php echo $label?>",
 					fill: false,
 					lineTension: 1,
 					backgroundColor: "rgba(59, 89, 152, 0.75 )",
@@ -130,7 +159,6 @@
         			scales: {
             			xAxes: [{
 							type: 'time',
-							//format: "HH:mm",
 							unitStepSize: 2,
                 			time: {	
 								unit: <?php echo $unit; ?>,										
@@ -173,21 +201,50 @@
 				  
 			    options.data = d;  
 				LineGraph = new Chart( ctx, options );
-				/*LineGraph = new Chart( ctx, {
-					type: 'line',
-					data: d,
-					options: options,
-				});*/	
+
 			}
 
-			//createChart(data);
+			// Get current measurement reading
+			$.ajax({
+			    url : "<?php echo $MEASUREMENT_HOST;?>get_current.php",
+			    type : "GET",
+			    success : function(data) {
+
+				    console.log(data);		
+
+					datetime = data[0].date;
+					current_value = data[0].value;		    
+				
+					$("div#lastReading").text( "<b>Last reading</b>: " + current_value );					
+				}
+			});
+
+			// Get statistics
+			$.ajax({
+			    url : "<?php echo $MEASUREMENT_HOST;?>get_stats.php",
+			    type : "GET",
+			    success : function(data) {
+
+				    console.log(data);		
+
+					count = data[0].count;
+					max = data[0].max;
+					min = data[0].min;
+					mean = data[0].mean;
+
+					$("div#minReading").text( "Minimum value: " + min );
+					$("div#maxReading").text( "Maximum value: " + max );					
+					$("div#meanReading").text( "Mean value: " + mean );
+					$("div#countReading").text( "# sample points: " + count );					
+				}
+			});
 
 			function fetchData(){ $.ajax({
 			    url : "<?php echo $MEASUREMENT_HOST;?>get_measurement.php?from=<?php echo $from?>&to=<?php echo $to?>",
 			    type : "GET",
 			    success : function(data) {
 
-				    console.log(data);		
+				    console.log(data);
 
 					measurement_time = [];
 					measurement_value = [];		    
@@ -197,19 +254,16 @@
 					    measurement_value.push( data[i].value );
 				    }
 
-					/*LineGraph.config.data = measurement_value;
-					var foo = eval($(this).data('chart'));
-					console.log(foo);
-					createChart(foo); */
-					//options.data = data;
+					//absmean = absmean/count;
+
 					data = {
 						labels: measurement_time,
 						datasets: [{
-							label: "Temperature south wall",
+							label: "<?php echo $label;?>",
 							fill: false,
 							lineTension: 1,
 							backgroundColor: "rgba(59, 89, 152, 0.75 )",
-                			borderColor: "rgba(59, 89, 152, 1)",
+                			borderColor: "rgba(59, 89, 152, 1 )",
                     		pointRadius: 0,  // Don't draw points
 							pointHoverBackgroundColor: "rgba(59, 89, 152, 1)",
 							pointHoverBorderColor: "rgba(59, 89, 152, 1)",						    
@@ -217,7 +271,10 @@
 						}]
 					};
 					createChart( data );
-					$("div#updateTime").text( "Last updated: " + moment().format("YYYY-MM-DD HH:mm:ss") );		    
+					$("div#updateTime").text( "Last updated: " + moment().format("YYYY-MM-DD HH:mm:ss") );
+					/*$("div#minReading").text( "Last reading: " + absmin );
+					$("div#maxReading").text( "Last reading: " + absmax );
+					$("div#meanReading").text( "Last reading: " + absmean );*/
 				},
                 
                 error : function(data) {
@@ -231,13 +288,6 @@
 		
 		});
 
-		$('.btn-load').on('click', function(){
-			console.log("--------------");
-			/*var foo = eval($(this).data('chart'));
-			console.log(foo);*/
-
-			createChart(data);
-		});
 		</script>
 
 	</body>
