@@ -87,7 +87,7 @@
 		<div class="container">           
   		<table class="table table-striped">	
 		<thead>
-			<tr><td>Data for selected range</td></tr>
+			<tr><td class="bg-success" >Data for selected range</td></tr>
 		</thead>
 		<tbody>	  
 		<tr><td><div class="text-success" id="updateTime"></div></td></tr>
@@ -215,7 +215,7 @@
 					datetime = data[0].date;
 					current_value = data[0].value;		    
 				
-					$("div#lastReading").text( "<b>Last reading</b>: " + current_value );					
+					$("div#lastReading").text( "Last reading: " + current_value );					
 				}
 			});
 
