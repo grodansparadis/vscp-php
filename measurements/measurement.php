@@ -67,7 +67,7 @@
 	<head>
 		<meta http-equiv="refresh" content="1000">
 		<meta charset="utf-8">
-		<title>Day temperature</title>
+		<title>VSCP measurement</title>
 		<style>
 			.chart-container {
 				width: 90%;
@@ -75,9 +75,16 @@
 			}
 		</style>
 
+		<!-- Bootstrap core CSS -->
+		<link href="js/bootstrap-4.0.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+		<!-- Custom styles for this template -->
+		<link href="measurements.css" rel="stylesheet">
+
 	</head>
 	<body>
 
+		This is some text.<br>
 		<div class="chart-container">
 			<canvas id="mycanvas"></canvas>
 		</div>
@@ -219,6 +226,10 @@
 				}
 			});
 
+			function truncate (num, places) {
+  				return Math.trunc(num * Math.pow(10, places)) / Math.pow(10, places);
+			}
+
 			// Get statistics
 			$.ajax({
 			    url : "<?php echo $MEASUREMENT_HOST;?>get_stats.php",
@@ -230,7 +241,7 @@
 					count = data[0].count;
 					max = data[0].max;
 					min = data[0].min;
-					mean = data[0].mean;
+					mean = truncate( data[0].mean, 2 );
 
 					$("div#minReading").text( "Minimum value: " + min );
 					$("div#maxReading").text( "Maximum value: " + max );					

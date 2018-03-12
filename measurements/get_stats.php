@@ -32,7 +32,7 @@
         $guid = 'FF:FF:FF:FF:FF:FF:FF:FF:61:00:08:01:92:AF:A8:10';    
     }    
 
-    $conn = new mysqli("mysql690.loopia.se", "test@v188090", "secret82050", "vscp_org");
+    $conn = new mysqli($MYSQL_SERVER, $MYSQL_USER, $MYSQL_PASSWORD, $MYSQL_DATABASE);
 
     if ( !$conn ){
 	    die("Connection to database failed: " . $conn->error);

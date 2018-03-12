@@ -2,6 +2,22 @@ body {
   font-size: .875rem;
 }
 
+@media (max-width: @screen-xs.max) {
+  body{font-size: 10px;}
+}
+
+@media (max-width: @screen-sm.max) {
+  body{font-size: 14px;}
+}
+
+@media (max-width: @screen-md.max) {
+  body{font-size: 24px;}
+}
+
+@media (max-width: @screen-lg.max) {
+  body{font-size: 34px;}
+}
+
 .feather {
   width: 16px;
   height: 16px;
