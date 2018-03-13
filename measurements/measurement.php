@@ -104,16 +104,8 @@
 		<tr><td><div class="text-muted" id="countReading"></div></td></tr>
 		</tbody>
 		</table>
+		</div>
 
-		<!--	
-		<?php echo( $from ); ?>
-		<?php echo( " - " ); ?>
-		<?php echo( $to ); ?>		
-		<?php echo( "<br>"); ?>
-		<?php print_r(  $diff ); ?>
-		<?php echo( "<br>"); ?>
-		<?php print date('d M Y\TH:i:s', strtotime('last day of this month') ); ?>
-		-->
 		
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
@@ -264,8 +256,6 @@
 					    measurement_value.push( data[i].value );
 				    }
 
-					//absmean = absmean/count;
-
 					data = {
 						labels: measurement_time,
 						datasets: [{
@@ -282,9 +272,7 @@
 					};
 					createChart( data );
 					$("div#updateTime").text( "Last updated: " + moment().format("YYYY-MM-DD HH:mm:ss") );
-					/*$("div#minReading").text( "Last reading: " + absmin );
-					$("div#maxReading").text( "Last reading: " + absmax );
-					$("div#meanReading").text( "Last reading: " + absmean );*/
+
 				},
                 
                 error : function(data) {

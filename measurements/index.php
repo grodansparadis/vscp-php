@@ -50,6 +50,7 @@
       </ul>
     </nav>
 
+    <!--  Hidden on sm devices -->
     <div class="container-fluid">
       <div class="row">
         <nav class="col-md-2 d-none d-md-block bg-light sidebar">
@@ -111,16 +112,16 @@
               </div>
               
               <div class="btn-group mr-2">
-              <div class="dropdown">
-                <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="secoDropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  <span data-feather="activity"></span>
-                  Office 1 temperature                  
-                </button>
-                <div class="dropdown-menu" aria-labelledby="top-seco-menu">
-                  <ul class="nav flex-column " id="top-seco-menu">
-                  </ul>  
-                </div>   
-              </div>
+                <div class="dropdown">
+                  <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="secoDropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span data-feather="activity"></span>
+                      Office 1 temperature                  
+                  </button>
+                  <div class="dropdown-menu" aria-labelledby="top-seco-menu">
+                    <ul class="nav flex-column " id="top-seco-menu">
+                    </ul>  
+                  </div>   
+                </div>
               </div>
               
               <div class="dropdown">
@@ -150,9 +151,20 @@
 
           <canvas class="my-4" id="mycanvas" width="900" height="380"></canvas>
 
-          <p>
-          <h6><div id="updateTime">-</div></h6>
-          </p>
+          <div class="container">           
+  		      <table class="table table-striped">	
+		          <thead>
+			          <tr><td class="text-success" ><b>Data for selected range</b></td></tr>
+		          </thead>
+		          <tbody>	  
+		            <tr><td><div class="text-muted" id="updateTime"></div></td></tr>
+		            <tr><td><div class="text-muted" id="lastReading"></div></td></tr>
+		            <tr><td><div class="text-muted" id="minReading"></div></td></tr>
+		            <tr><td><div class="text-muted" id="maxReading"></div></td></tr>		
+		            <tr><td><div class="text-muted" id="meanReading"></div></td></tr>
+		            <tr><td><div class="text-muted" id="countReading"></div></td></tr>
+		          </tbody>
+		        </table>
 
         </main>
       </div>
@@ -290,9 +302,6 @@
               $("#side-seco-menu").append('<li class="nav-item"><a class="nav-link" ' +
                                   'href="javascript:fetchData(\'' + data[i].guid + '\',\'' + data[i].name + '\');">' +
                                   '<span data-feather="activity"></span> ' + data[i].name + '</a><span data-feather="activity"></span></li>');
-              /* $("#top-seco-menu").append('<a class="dropdown-item" ' +
-                                  'href="javascript:fetchData(\'' + data[i].guid + '\',\'' + data[i].name + '\');">' +
-                                  data[i].name +  ' </a>'); */
               $("#top-seco-menu").append('<li class="nav-item"><a class="nav-link" ' +
                                   'href="javascript:fetchData(\'' + data[i].guid + '\',\'' + data[i].name + '\');">' +
                                   '<span data-feather="activity"> </span> ' + data[i].name + '</a></li>');                                                                  
@@ -305,6 +314,45 @@
           }
 
         }); 
+
+        // Get current measurement reading
+			  $.ajax({
+			    url : "<?php echo $MEASUREMENT_HOST;?>get_current.php",
+			    type : "GET",
+			    success : function(data) {
+
+				    console.log(data);		
+
+					  datetime = data[0].date;
+					  current_value = data[0].value;		    
+				
+					  $("div#lastReading").text( "Last reading: " + current_value );					
+				  }
+			  });
+
+        function truncate (num, places) {
+  				return Math.trunc(num * Math.pow(10, places)) / Math.pow(10, places);
+			  }
+
+			  // Get statistics
+			  $.ajax({
+			    url : "<?php echo $MEASUREMENT_HOST;?>get_stats.php",
+			    type : "GET",
+			    success : function(data) {
+
+				    console.log(data);		
+
+					  count = data[0].count;
+					  max = data[0].max;
+					  min = data[0].min;
+					  mean = truncate( data[0].mean, 2 );
+
+					  $("div#minReading").text( "Minimum value: " + min );
+					  $("div#maxReading").text( "Maximum value: " + max );					
+					  $("div#meanReading").text( "Mean value: " + mean );
+					  $("div#countReading").text( "# sample points: " + count );					
+				  }
+			  });
 
         ///////////////////////////////////////////////////////////////////////
         // Fetchdata
@@ -363,13 +411,6 @@
       $(document).ready(function(){ 
 
         drawGraphics(); 
-        //var ctx = $("#mycanvas");
-        //options.data = data;
-        //LineGraph = new Chart( ctx, options );
-
-        // Uncomment to draw on page load
-        //fetchData();
-        //setInterval( function() { fetchData(); }, 10000 );
 
       });
 
