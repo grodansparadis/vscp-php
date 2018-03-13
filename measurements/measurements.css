@@ -107,3 +107,9 @@ body {
 
 .border-top { border-top: 1px solid #e5e5e5; }
 .border-bottom { border-bottom: 1px solid #e5e5e5; }
+
+
+#canvas_gauge1 {
+  margin: auto;
+  display: block;
+}

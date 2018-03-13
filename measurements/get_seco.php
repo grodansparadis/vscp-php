@@ -1,18 +1,19 @@
 <?php
+	/*
+	ini_set('display_errors', 1);
+	ini_set('display_startup_errors', 1);
+	error_reporting(E_ALL);
+	*/
 
 	function jsonRemoveUnicodeSequences($struct) {
 		return preg_replace("/\\\\u([a-f0-9]{4})/e", "iconv('UCS-4LE','UTF-8',pack('V', hexdec('U$1')))", json_encode($struct));
  	};
 
-	/*ini_set('display_errors', 1);
-	ini_set('display_startup_errors', 1);
-	error_reporting(E_ALL);*/
-
 	include '../../settings.cfg';  // Settings
 
 	header("Content-Type: application/json; charset=UTF-8");
 
-	$conn = new mysqli("mysql690.loopia.se", "test@v188090", "secret82050", "vscp_org");
+	$conn = new mysqli($MYSQL_SERVER, $MYSQL_USER, $MYSQL_PASSWORD, $MYSQL_DATABASE);
 
 	if ( !$conn ){
 		die("Connection to database failed: " . $conn->error);

@@ -83,8 +83,7 @@
 
 	</head>
 	<body>
-
-		This is some text.<br>
+		
 		<div class="chart-container">
 			<canvas id="mycanvas"></canvas>
 		</div>
@@ -94,15 +93,15 @@
 		<div class="container">           
   		<table class="table table-striped">	
 		<thead>
-			<tr><td class="bg-success" >Data for selected range</td></tr>
+			<tr><td class="text-success" ><b>Data for selected range</b></td></tr>
 		</thead>
 		<tbody>	  
-		<tr><td><div class="text-success" id="updateTime"></div></td></tr>
-		<tr><td><div class="text-success" id="lastReading"></div></td></tr>
-		<tr><td><div class="text-success" id="minReading"></div></td></tr>
-		<tr><td><div class="text-success" id="maxReading"></div></td></tr>		
-		<tr><td><div class="text-success" id="meanReading"></div></td></tr>
-		<tr><td><div class="text-success" id="countReading"></div></td></tr>
+		<tr><td><div class="text-muted" id="updateTime"></div></td></tr>
+		<tr><td><div class="text-muted" id="lastReading"></div></td></tr>
+		<tr><td><div class="text-muted" id="minReading"></div></td></tr>
+		<tr><td><div class="text-muted" id="maxReading"></div></td></tr>		
+		<tr><td><div class="text-muted" id="meanReading"></div></td></tr>
+		<tr><td><div class="text-muted" id="countReading"></div></td></tr>
 		</tbody>
 		</table>
 
