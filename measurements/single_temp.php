@@ -71,16 +71,23 @@
 			</div>
 
 			<div class="row">
-              <div class="dropdown mx-auto">
-                <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="secoDropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  <span data-feather="activity"></span>
-                  Select source                  
-                </button>
-                <div class="dropdown-menu" aria-labelledby="top-seco-menu">
-                  <ul class="nav flex-column " id="top-seco-menu">
-                  </ul>  
-                </div>   
-              </div>
+			
+				<div class="col-sm-3"></div>
+				<div class="col-sm-6">
+             		<div class="dropdown mx-auto">
+						<button class="btn btn-block btn-outline-secondary dropdown-toggle" type="button" 
+								id="secoDropdownMenuButton" data-toggle="dropdown" 	
+								aria-haspopup="true" aria-expanded="false">
+                  		<span data-feather="activity"></span>
+                  		Select source                  
+                		</button>
+                		<div class="dropdown-menu" aria-labelledby="top-seco-menu">
+                  			<ul class="nav flex-column " id="top-seco-menu">
+                  		</ul>  
+                	</div>   
+				  </div>
+		        </div>  
+			    <div class="col-sm-3"></div>
 			</div>
 
 		</div>
@@ -109,8 +116,8 @@
 
 			var gauge1 = new LinearGauge({ 
 					renderTo: 'canvas_gauge', 
-        			width: 160,
-        		    height: 600,
+        			width: 260,
+        		    height: 800,
 					glow: true,
 					valueBox: true,
         			borderRadius: 20,
@@ -133,7 +140,7 @@
         			colorValueBoxShadow: true
 			});
 
-			gauge1.draw();
+			
 
 			
 
@@ -227,10 +234,8 @@
 
 			$(document).ready(function(){
 
-
+				gauge1.draw();
 							
-		
-
 				fetchData(guid, sensorname, sensorindex);
 				setInterval( function() { fetchData(guid,sensorname,sensorindex); }, 10000 );
 

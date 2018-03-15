@@ -78,17 +78,23 @@
 				<div class="text-muted mx-auto" id="idInfoText"></div>
 			</div>
 
-			<div class="row">
-              <div class="dropdown mx-auto">
-                <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="secoDropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  <span data-feather="activity"></span>
-                  Select source                  
-                </button>
-                <div class="dropdown-menu" aria-labelledby="top-seco-menu">
-                  <ul class="nav flex-column " id="top-seco-menu">
-                  </ul>  
-                </div>   
-              </div>
+			<div class="row">			
+				<div class="col-sm-3"></div>
+				<div class="col-sm-6">
+					 <div class="dropdown mx-auto">
+						<button class="btn btn-block btn-outline-secondary dropdown-toggle" type="button" 
+								id="secoDropdownMenuButton" data-toggle="dropdown" 	
+								aria-haspopup="true" aria-expanded="false">
+					  	<span data-feather="activity"></span>
+					  	Select source                  
+						</button>
+						<div class="dropdown-menu" aria-labelledby="top-seco-menu">
+							<ul class="nav flex-column " id="top-seco-menu">
+					  	</ul>  
+					</div>   
+			  	</div>
+				</div>  
+				<div class="col-sm-3"></div>
 			</div>
 
 		</div>
@@ -110,7 +116,8 @@
 		<script type="text/javascript">
 
 			var guid = "<?php echo $guid;?>";
-			var sensorname = "Unknown";
+			var sensorindex = "<?php echo $sensorindex;?>";
+			var sensorname = "";
 
 			var gauge1 = new RadialGauge({ 
 					renderTo: 'canvas_gauge', 
@@ -138,74 +145,99 @@
         			colorValueBoxShadow: true
 			});
 
-				
-			gauge1.draw();
+			///////////////////////////////////////////////////////////////////////
+        	// Fetchdata
+        	//
 
-			function fetchData(newguid, sensorname) {
-				
+			function fetchData(newguid, newsensorname, newsensorindex) {
+					
+				console.log( newguid, newsensorname, newsensorindex );
+	
+				guid = newguid;
+				sensorname = newsensorname;
+				sensorindex = newsensorindex;
+	
 				// Get current measurement reading
 				$.ajax({
-			    	url : "<?php echo $MEASUREMENT_HOST;?>get_current.php?guid=" + newguid,
-			    	type : "GET",
-			    	success : function(data) {
-
-				    	console.log(data);		
-
+					url : "<?php echo $MEASUREMENT_HOST;?>get_current.php?guid=" + newguid + 
+												"&sensorindex=" + newsensorindex,
+					type : "GET",
+					success : function(data) {
+	
+						console.log(data);		
+	
 						datetime = data[0].date;
 						current_value = data[0].value;	
-
+	
 						// Update gauge
-						gauge1.value = current_value;	
-
-						$("div#idInfoText").html( "<h2>" + sensorname + "</h2>" );
-						guid = newguid;    
-				
-						$("div#lastReading").text( "Last reading: " + current_value );					
+						gauge1.value = current_value;	    
+	
+						if ( newsensorname.length ) {	
+							$("div#idInfoText").html( "<h2>" + newsensorname + "</h2>" );
+						}
+										
 					}
 				});
-			}
+			};
+	
+	
+			///////////////////////////////////////////////////////////////////
+			// Fetch seco's
+			//
+	
+				$.ajax({
+					  url : "<?php echo $MEASUREMENT_HOST;?>get_seco.php",
+					  type : "GET",
+					  success : function(data) {
+	
+						console.log(data.length, data);	
+	
+						if ( data.length )	{
+	
+							seco_name = [];
+							seco_description = [];
+							seco_guid = [];
+							seco_sensorindex = [];
+	
+							for ( var i in data ) {
+	
+								seco_name.push( data[i].name );
+								seco_description.push( data[i].description );
+								seco_guid.push( data[i].guid );
+								seco_sensorindex.push( data[i].sensorindex ); 
+	
+								$("#top-seco-menu").append('<li class="nav-item"><a class="nav-link" ' +
+									  'href="javascript:fetchData(\'' + data[i].guid + '\',\'' + data[i].name +
+									  '\',\'' + data[i].sensorindex + '\' );">' +
+									  '<span data-feather="activity"> </span> ' + data[i].name + '</a></li>');
+	
+								var setguid = "<?php echo $guid; ?>";
+								if ( !setguid.localeCompare( data[i].guid ) ) {
+									$("div#idInfoText").html( "<h2>" + data[i].name + "</h2>" );
+									sensorname = data[i].name;
+									guid = data[i].guid;
+									sensorindex = data[i].sensorindex;
+								}
+	
+							}
+						}
+						else {
+							sensorname = "no data available!"
+						}
+					   
+					  },
+	
+					  error : function(data) {
+	
+					  }
+			});
 
 			$(document).ready(function(){
 
-				// Get seco data
-        		$.ajax({
-          			url : "<?php echo $MEASUREMENT_HOST;?>get_seco.php",
-          			type : "GET",
-          			success : function(data) {
+				gauge1.draw();
 
-            			console.log(data);		
-
-            			seco_name = [];
-            			seco_description = [];
-            			seco_guid = [];
-
-            			for ( var i in data ) {
-
-              				seco_name.push( data[i].name );
-              				seco_description.push( data[i].description );
-              				seco_guid.push( data[i].guid );
-  
-              				$("#top-seco-menu").append('<li class="nav-item"><a class="nav-link" ' +
-                                  'href="javascript:fetchData(\'' + data[i].guid + '\',\'' + data[i].name + '\');">' +
-                                  '<span data-feather="activity"> </span> ' + data[i].name + '</a></li>');
-
-							var guid = "<?php echo $guid; ?>";
-							if ( !guid.localeCompare( data[i].guid ) ) {
-								$("div#idInfoText").html( "<h2>" + data[i].name + "</h2>" );
-								sensorname = data[i].name;
-							}
-            			}
-                                   
-          			},
-    
-          			error : function(data) {
-
-          			}
-
-        		}); 	
-		
-				fetchData(guid,sensorname);
-				setInterval( function() { fetchData(guid,sensorname); }, 10000 );
+				fetchData(guid, sensorname, sensorindex);
+				setInterval( function() { fetchData(guid,sensorname,sensorindex); }, 10000 );
 		
 			});
 
