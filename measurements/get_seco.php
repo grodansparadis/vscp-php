@@ -19,7 +19,7 @@
 		die("Connection to database failed: " . $conn->error);
 	}
 
-	$result = $conn->query("SELECT seco.name, seco.description, guid.guid FROM seco, guid WHERE guid.idx = seco.link_to_guid;");
+	$result = $conn->query("SELECT seco.name, seco.description, seco.sensorindex, guid.guid FROM seco, guid WHERE guid.idx = seco.link_to_guid;");
 	if ($result->connect_errno) {
 		echo "Failed to connect to MySQL: (" . $result->connect_errno . ") " . $resultmysqli->connect_error;
 	}

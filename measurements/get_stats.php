@@ -32,6 +32,13 @@
         $guid = 'FF:FF:FF:FF:FF:FF:FF:FF:61:00:08:01:92:AF:A8:10';    
     }    
 
+    // Get sensor index
+    $sensorindex = $_GET["sensorindex"];
+    trim($sensorindex);
+    if ( 0 == strlen($sensorindex) ) {
+        $sensorindex = 0;    
+    }
+
     $conn = new mysqli($MYSQL_SERVER, $MYSQL_USER, $MYSQL_PASSWORD, $MYSQL_DATABASE);
 
     if ( !$conn ){
@@ -40,7 +47,7 @@
 
     $result = $conn->query("SELECT COUNT(value) as count, MAX(value)as max, MIN(value) as min, SUM(value)/COUNT(*) as mean  FROM `measurement` " .
         "WHERE ( date BETWEEN '" . $from . "' AND '" . $to . "' ) " .
-        "AND guid='" . $guid . "';" );
+        "AND guid='" . $guid . "' AND sensorindex=". $sensorindex . ";" );
 
     $outp = array();
     $outp = $result->fetch_all( MYSQLI_ASSOC );

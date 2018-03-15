@@ -47,6 +47,13 @@
     if ( 0 == strlen($guid) ) {
         $guid = 'FF:FF:FF:FF:FF:FF:FF:FF:61:00:08:01:92:AF:A8:10';    
 	}
+
+	// Get sensor index
+    $sensorindex = $_GET["sensorindex"];
+    trim($sensorindex);
+    if ( 0 == strlen($sensorindex) ) {
+        $sensorindex = 0;    
+    }
 	
 	$d1=new DateTime($from);
     $d2=new DateTime($to);
@@ -204,7 +211,7 @@
 
 			// Get current measurement reading
 			$.ajax({
-			    url : "<?php echo $MEASUREMENT_HOST;?>get_current.php",
+			    url : "<?php echo $MEASUREMENT_HOST;?>get_current.php?guid=<?php echo $guid;?>&sensorindex=<?php echo $sensorindex?>",
 			    type : "GET",
 			    success : function(data) {
 
@@ -223,7 +230,7 @@
 
 			// Get statistics
 			$.ajax({
-			    url : "<?php echo $MEASUREMENT_HOST;?>get_stats.php",
+			    url : "<?php echo $MEASUREMENT_HOST;?>get_stats.php?guid=<?php echo $guid;?>&sensorindex=<?php echo $sensorindex?>",
 			    type : "GET",
 			    success : function(data) {
 
@@ -242,7 +249,7 @@
 			});
 
 			function fetchData(){ $.ajax({
-			    url : "<?php echo $MEASUREMENT_HOST;?>get_measurement.php?from=<?php echo $from?>&to=<?php echo $to?>",
+			    url : "<?php echo $MEASUREMENT_HOST;?>get_measurement.php?from=<?php echo $from?>&to=<?php echo $to?>&guid=<?php echo $guid;?>&sensorindex=<?php echo $sensorindex?>",
 			    type : "GET",
 			    success : function(data) {
 
