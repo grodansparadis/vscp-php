@@ -97,6 +97,16 @@
 				<div class="col-sm-3"></div>
 			</div>
 
+			<div class="row">
+				<div class="col-sm-3"></div>
+				<div class="col-sm-6">
+					<div class="text-muted text-center" id="copyright"><br><br>Copyright &copy; 2018 Åke Hedman, <a href="http://www.grodansparadis.com">Grodans Paradis AB</a><br>
+			    	Part of the <a href="https://www.vscp.org">vscp.org</a> project.
+					</div>
+				</div>  
+				<div class="col-sm-3"></div>
+			</div>
+
 		</div>
 
 		<!-- javascript -->
