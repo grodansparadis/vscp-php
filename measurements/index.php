@@ -23,7 +23,7 @@
     <meta name="author" content="">
     <link rel="icon" href="favicon.ico">
 
-    <title>VSCP measurements</title>
+    <title>VSCP Measurement Visualize</title>
 
     <style>
 		.chart-container {
@@ -41,7 +41,7 @@
 
   <body>
     <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
-      <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">VSCP</a>
+      <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">VSCP mv</a>
       <input class="form-control form-control-dark w-100" type="text" placeholder="Date+time range" aria-label="Search">
       <ul class="navbar-nav px-3">
         <li class="nav-item text-nowrap">
@@ -103,7 +103,7 @@
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
           <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
             
-            <h1 class="h2">VSCP Measurements</h1>
+            <h1 class="h2">Measurement</h1>
             <div class="btn-toolbar mb-2 mb-md-0">
               
               <div class="btn-group mr-2">
@@ -151,20 +151,27 @@
 
           <canvas class="my-4" id="mycanvas" width="900" height="380"></canvas>
 
-          <div class="container">           
-  		      <table class="table table-striped">	
-		          <thead>
-			          <tr><td class="text-success" ><b>Data for selected range</b></td></tr>
-		          </thead>
-		          <tbody>	  
-		            <tr><td><div class="text-muted" id="updateTime"></div></td></tr>
-		            <tr><td><div class="text-muted" id="lastReading"></div></td></tr>
-		            <tr><td><div class="text-muted" id="minReading"></div></td></tr>
-		            <tr><td><div class="text-muted" id="maxReading"></div></td></tr>		
-		            <tr><td><div class="text-muted" id="meanReading"></div></td></tr>
-		            <tr><td><div class="text-muted" id="countReading"></div></td></tr>
-		          </tbody>
-		        </table>
+            <div class="container">         
+  		        <table class="table table-striped">	
+		            <thead>
+			            <tr><td class="text-success" ><b>Data for selected range</b></td></tr>
+		            </thead>
+		            <tbody>	  
+		              <tr><td><div class="text-muted" id="updateTime"></div></td></tr>
+		              <tr><td><div class="text-muted" id="lastReading"></div></td></tr>
+		              <tr><td><div class="text-muted" id="minReading"></div></td></tr>
+		              <tr><td><div class="text-muted" id="maxReading"></div></td></tr>		
+		              <tr><td><div class="text-muted" id="meanReading"></div></td></tr>
+		              <tr><td><div class="text-muted" id="countReading"></div></td></tr>
+		            </tbody>
+              </table>
+            </div>
+            
+            <div>
+					    <div class="text-muted text-center" id="copyright"><br><br>Copyright &copy; 2018 Åke Hedman, <a href="http://www.grodansparadis.com">Grodans Paradis AB</a><br>
+			    	  Part of the <a href="https://www.vscp.org">vscp.org</a> project. MIT Licens
+					    </div>
+				    </div>  
 
         </main>
       </div>
@@ -175,11 +182,6 @@
     <!-- Placed at the end of the document so the pages load faster -->
     <script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
 	  <script type="text/javascript" src="js/moment.min.js"></script>
-  	<!-- <script type="text/javascript" src="js/Chart.min.js"></script> -->
-	  <!-- <script type="text/javascript" src="js/linegraph.js"></script> -->
-    <!-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script>window.jQuery || document.write('<script src="js/bootstrap-4.0.0/assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
-    -->
     <script src="js/bootstrap-4.0.0/assets/js/vendor/popper.min.js"></script>
     <script src="js/bootstrap-4.0.0/dist/js/bootstrap.min.js"></script>
 
@@ -193,22 +195,26 @@
     <script src="js/Chart.min.js"></script>
     <script>
 
+      var label = "";
+      var guid;
+			var sensorindex = 0;
+			var sensorname;
       var data;
       var options;
       var LineGraph;
       var measurement_time = [];
       var measurement_value = [];
 
-      function hello() {
-        alert("Hello");
-      }
+      /////////////////////////////////////////////////////////////////////////
+      // drawGraphics
+      //
 
       function drawGraphics() {
 
         data = {
           labels: measurement_time,
           datasets: [{
-            label: "Temperature south wall",
+            label: label,
             fill: false,
             lineTension: 1,
             backgroundColor: "rgba(59, 89, 152, 0.75 )",
@@ -266,77 +272,29 @@
         options.data = data;
         LineGraph = new Chart( ctx, options );
 
-      }      
-
-      function createChart(d) {
-
-        if ( LineGraph) { 
-          LineGraph.destroy();
-        }
-      
-        options.data = d;  
-        var ctx = $("#mycanvas");
-        LineGraph = new Chart( ctx, options );
-
       }     
 
+      ///////////////////////////////////////////////////////////////////////
+			// truncate
+      //
 
-        // Get seco data
+      function truncate (num, places) {
+  		  return Math.trunc(num * Math.pow(10, places)) / Math.pow(10, places);
+			}
 
-        $.ajax({
-          url : "<?php echo $MEASUREMENT_HOST;?>get_seco.php",
-          type : "GET",
-          success : function(data) {
+      ///////////////////////////////////////////////////////////////////////
+			// Get statistics
+      // 
 
-            console.log(data);		
+      function getStatistics() {
 
-            seco_name = [];
-            seco_description = [];
-            seco_guid = [];
+        //
+        // Get statistics
+        //
 
-            for ( var i in data ) {
-              seco_name.push( data[i].name );
-              seco_description.push( data[i].description );
-              seco_guid.push( data[i].guid );
-              console.log('href="javascript:alert(\'' + data[i].guid + '\');">');  
-              $("#side-seco-menu").append('<li class="nav-item"><a class="nav-link" ' +
-                                  'href="javascript:fetchData(\'' + data[i].guid + '\',\'' + data[i].name + '\');">' +
-                                  '<span data-feather="activity"></span> ' + data[i].name + '</a><span data-feather="activity"></span></li>');
-              $("#top-seco-menu").append('<li class="nav-item"><a class="nav-link" ' +
-                                  'href="javascript:fetchData(\'' + data[i].guid + '\',\'' + data[i].name + '\');">' +
-                                  '<span data-feather="activity"> </span> ' + data[i].name + '</a></li>');                                                                  
-            }
-                                   
-          },
-    
-          error : function(data) {
-
-          }
-
-        }); 
-
-        // Get current measurement reading
 			  $.ajax({
-			    url : "<?php echo $MEASUREMENT_HOST;?>get_current.php",
-			    type : "GET",
-			    success : function(data) {
-
-				    console.log(data);		
-
-					  datetime = data[0].date;
-					  current_value = data[0].value;		    
-				
-					  $("div#lastReading").text( "Last reading: " + current_value );					
-				  }
-			  });
-
-        function truncate (num, places) {
-  				return Math.trunc(num * Math.pow(10, places)) / Math.pow(10, places);
-			  }
-
-			  // Get statistics
-			  $.ajax({
-			    url : "<?php echo $MEASUREMENT_HOST;?>get_stats.php",
+			    url : "<?php echo $MEASUREMENT_HOST;?>get_stats.php?guid=" + guid + 
+											"&sensorindex=" + sensorindex,
 			    type : "GET",
 			    success : function(data) {
 
@@ -354,17 +312,42 @@
 				  }
 			  });
 
-        ///////////////////////////////////////////////////////////////////////
-        // Fetchdata
         //
+        // Get current measurement reading
+        // 
+        
+			  $.ajax({
+			    url : "<?php echo $MEASUREMENT_HOST;?>get_current.php?guid=" + guid + 
+											"&sensorindex=" + sensorindex,
+			    type : "GET",
+			    success : function(data) {
 
-        function fetchData($guid, $sensorname){ 
+				    console.log(data);		
+
+					  datetime = data[0].date;
+					  current_value = data[0].value;		    
+				
+					  $("div#lastReading").text( "Last reading: " + current_value );					
+				  }
+			  });
+      } 
+
+      ///////////////////////////////////////////////////////////////////////
+      // Fetchdata
+      //
+
+      function fetchData( newguid, newsensorname, newsensorindex ) { 
           
-          console.log( "GUID = " + $guid);
-          console.log("<?php echo $MEASUREMENT_HOST;?>get_measurement.php?from=<?php echo $from;?>&to=<?php echo $to;?>&guid=" + $guid );
+        console.log( "GUID = " + newguid );
+        console.log( "SENSORNAME = " + newsensorname );
+        console.log( "SENSORINDEX = " + newsensorindex );
 
-          $.ajax({          
-          url : "<?php echo $MEASUREMENT_HOST;?>get_measurement.php?from=<?php echo $from;?>&to=<?php echo $to;?>&guid=" + $guid,
+        guid = newguid;
+        sensorname = newsensorname;
+        sensorindex = newsensorindex;
+
+        $.ajax({          
+          url : "<?php echo $MEASUREMENT_HOST;?>get_measurement.php?from=<?php echo $from;?>&to=<?php echo $to;?>&guid=" + newguid + "&sensorindex=" + newsensorindex,
           type : "GET",
           success : function(data) {
 
@@ -381,7 +364,7 @@
             data = {
               labels: measurement_time,
               datasets: [{
-                label: $sensorname,
+                label: sensorname,
                 fill: false,
                 lineTension: 1,
                 backgroundColor: "rgba(59, 89, 152, 0.75 )",
@@ -395,6 +378,8 @@
         
             createChart( data );
             $("div#updateTime").text( "Last update: " + moment().format("YYYY-MM-DD HH:mm:ss") );	
+
+            getStatistics();
                                    
           },
     
@@ -403,8 +388,75 @@
           }
 
         }); 
-      };     
+      };        
 
+      /////////////////////////////////////////////////////////////////////////
+      // createChart
+      //
+
+      function createChart(d) {
+
+        if ( LineGraph) { 
+          LineGraph.destroy();
+        }
+      
+        options.data = d;  
+        var ctx = $("#mycanvas");
+        LineGraph = new Chart( ctx, options );
+
+      }     
+
+      /////////////////////////////////////////////////////////////////////////
+      // Get seco data
+      // 
+
+      $.ajax({
+          url : "<?php echo $MEASUREMENT_HOST;?>get_seco.php",
+          type : "GET",
+          success : function(data) {
+
+            console.log(data);		
+
+            seco_name = [];
+            seco_description = [];
+            seco_guid = [];
+            seco_sensorindex = [];
+
+            if ( ( data != null ) && data.length ) {
+              
+              for ( var i in data ) {
+                seco_name.push( data[i].name );
+                seco_description.push( data[i].description );
+                seco_guid.push( data[i].guid );
+                seco_sensorindex.push( data[i].sensorindex );
+                console.log('href="javascript:alert(\'' + data[i].guid + '\');">');  
+                $("#side-seco-menu").append('<li class="nav-item"><a class="nav-link" ' +
+                                    'href="javascript:fetchData(\'' + data[i].guid + '\',\'' + data[i].name +
+					  			                                                  '\',\'' + data[i].sensorindex + '\' );">' +
+                                    '<span data-feather="activity"></span> ' + data[i].name + '</a><span data-feather="activity"></span></li>');
+                $("#top-seco-menu").append('<li class="nav-item"><a class="nav-link" ' +
+                                    'href="javascript:fetchData(\'' + data[i].guid + '\',\'' + data[i].name +
+					  			                                                  '\',\'' + data[i].sensorindex + '\' );">' +
+                                    '<span data-feather="activity"> </span> ' + data[i].name + '</a></li>');                                  
+              }
+
+              if ( 0 == label.length ) {
+                label = data[0].name;
+                sensorname = data[0].name;
+                guid = data[0].guid;
+                sensorindex = data[0].sensorindex;
+                fetchData( guid, sensorname, sensorindex );
+              }
+
+            }
+                                   
+          },
+    
+          error : function(data) {
+
+          }
+
+        }); 
 
       // Ready
 

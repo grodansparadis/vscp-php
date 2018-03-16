@@ -60,7 +60,6 @@
 			<div class="row">	
 				
 				<div class="mx-auto" >
-
 					<!-- Injecting linear gauge -->
 					<canvas id="canvas_gauge"></canvas>
 				</div>
@@ -94,7 +93,7 @@
 				<div class="col-sm-3"></div>
 				<div class="col-sm-6">
 					<div class="text-muted text-center" id="copyright"><br><br>Copyright &copy; 2018 Åke Hedman, <a href="http://www.grodansparadis.com">Grodans Paradis AB</a><br>
-			    	Part of the <a href="https://www.vscp.org">vscp.org</a> project.
+			    	Part of the <a href="https://www.vscp.org">vscp.org</a> project. MIT Licens
 					</div>
 				</div>  
 				<div class="col-sm-3"></div>
@@ -218,7 +217,8 @@
 					  			'<span data-feather="activity"> </span> ' + data[i].name + '</a></li>');
 
 							var setguid = "<?php echo $guid; ?>";
-							if ( !setguid.localeCompare( data[i].guid ) ) {
+							if ( !setguid.localeCompare( data[i].guid ) && 
+									( sensorindex == data[i].sensorindex ) ) {
 								$("div#idInfoText").html( "<h2>" + data[i].name + "</h2>" );
 								sensorname = data[i].name;
 								guid = data[i].guid;

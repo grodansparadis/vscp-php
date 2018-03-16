@@ -126,7 +126,7 @@
 				<div class="col-sm-3"></div>
 				<div class="col-sm-6">
 					<div class="text-muted text-center" id="copyright"><br><br>Copyright &copy; 2018 Åke Hedman, <a href="http://www.grodansparadis.com">Grodans Paradis AB</a><br>
-			    	Part of the <a href="https://www.vscp.org">vscp.org</a> project.
+			    	Part of the <a href="https://www.vscp.org">vscp.org</a> project.  MIT Licens
 					</div>
 				</div>  
 				<div class="col-sm-3"></div>
@@ -171,7 +171,7 @@
 
 					console.log(data.length, data);	
 
-					if ( data.length )	{
+					if ( ( data != null ) && data.length )	{
 
 						seco_name = [];
 						seco_description = [];
@@ -190,10 +190,18 @@
 									( sensorindex == data[i].sensorindex ) ) {
 								$("div#idHeader").html( "<h1>" + data[i].name + "</h1>" );
 								sensorname = data[i].name;
+								label = sensorname;
 								guid = data[i].guid;
 								sensorindex = data[i].sensorindex;
 							}
 
+						}
+
+						console.log("------------>", guid, sensorindex );
+
+						if ( label.length == 0 ) {							
+							label = data[i].name;
+							console.log("Setting name = " + label );
 						}
 					}
 					else {
